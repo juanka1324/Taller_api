@@ -14,6 +14,6 @@ class StudentsTableSeeder extends Seeder
     public function run()
     {
         // Genera 10 estudiantes falsos utilizando el Factory
-        Student::factory(10)->create();
+        Student::factory()->count(10)->create();
     }
 }
