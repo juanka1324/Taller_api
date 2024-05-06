@@ -11,4 +11,4 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('students', StudentController::class)->middleware('auth:sanctum');
 
-Route::post('/login', LoginController::class . '@login');
+Route::post('login', LoginController::class . 'login');

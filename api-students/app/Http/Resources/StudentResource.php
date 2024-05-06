@@ -15,7 +15,7 @@ class StudentResource extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return ['reference'=>$this->reference,
+        return [
         'name'=>$this->name,
         'lastname'=>$this->lastname,
         'age'=>$this->age,
