@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateStudentRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,14 +23,8 @@ class UpdateStudentRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'lastname' => 'required|string',
-            'age' => 'required|integer',
-            'email' => 'required|email',
-            'city' => 'required|string',
-            'address' => 'required|string',
-            'birthdate' => 'required|date',
-            'status' => 'required|boolean',
-            'category_id' => 'required|integer'
+            'description' => 'required|string',
+            'priority' => 'required|integer',
         ];
     }
 }

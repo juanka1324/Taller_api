@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStudentRequest;
 use Illuminate\Http\Request;
 use App\Models\Student;
-use App\Http\Resources\StudentResource;
+use App\Models\Category;
+use App\Http\Requests\UpdateStudentRequest;
 
 class StudentController extends Controller
 {
@@ -14,47 +15,60 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return StudentResource::collection(Student::paginate());
-
-        //return Student::paginate();
+        return Student::all();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentRequest $request)
+    public function store(Request $request)
     {
-        $student = Student::create($request->validated());
-        return response()->json($student, 201);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer|min:18',
+            'email' => 'required|email',
+            'category_id' => 'required|exists:categories,id', // Valida que el category_id exista en la tabla categories
+            // Otras reglas de validación
+        ]);
+        return response()->json($validatedData, 201);
+        
+    
+        // Crea el estudiante
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show($id)
     {
-        return $student;
+        $student = Student::findOrFail($id);
+        $student->load('category'); // Carga la relación con la categoría
+        return response()->json($student);
     }
+    
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Student $student)
+    public function update(UpdateStudentRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'age' => 'required|integer',
-            'address' => 'required|string',
-            'email' => 'required|email|unique:students,email,',
-            'city' => 'required|string',
-            'birthdate' => 'required|date',
-            'status' => 'required|boolean'
-            . $student->id,
-        ]);
+        // Valida la solicitud utilizando el Request personalizado
+        $validatedData = $request->validated();
+        
+        // Valida que el valor de la clave foránea sea un ID existente en la tabla de categorías
+        if (!$this->isValidCategoryId($validatedData['category_id'])) {
+            return response()->json(['error' => 'Invalid category ID'], 400);
+        }
 
-        $student->update($request->all());
-
-        return response()->json($student, 201);
+        $student = Student::findOrFail($id);
+        $student->update($validatedData);
+        
+        return response()->json($student);
+    }
+    private function isValidCategoryId($categoryId)
+    {
+        // Verifica si el ID de la categoría existe en la tabla de categorías
+        return Category::where('id', $categoryId)->exists();
     }
     /**
      * Remove the specified resource from storage.

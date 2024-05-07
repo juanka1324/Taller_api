@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Category;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
@@ -24,7 +25,9 @@ class StudentFactory extends Factory
             'city' => $this->faker->city,
             'address' => $this->faker->address,
             'birthdate' => $this->faker->dateTimeThisCentury->format('Y-m-d'),
-            'status' => $this->faker->boolean(50)
+            'status' => $this->faker->boolean(50),
+            'category_id' => Category::inRandomOrder()->first()->id
+
             ,
         ];
     }

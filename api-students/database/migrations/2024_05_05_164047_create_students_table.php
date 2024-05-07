@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->date('birthdate');
             $table->boolean('status')->default(1); 
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();       
         });
     }
